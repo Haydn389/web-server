@@ -33,13 +33,13 @@ int main(int argc, char **argv)
   while (1) {
     clientlen = sizeof(clientaddr);
     // 반복적으로 연결 요청을 접수하고,
-    connfd = Accept(listenfd, (SA *)&clientaddr, &clientlen);  // line:netp:tiny:accept
+    connfd = Accept(listenfd, (SA *)&clientaddr, &clientlen);
     Getnameinfo((SA *)&clientaddr, clientlen, host, MAXLINE, port, MAXLINE, 0);
     printf("Accepted connection from (%s, %s)\n", host, port);
     // 트랜잭션을 수행하고,
-    doit(connfd);   // line:netp:tiny:doit
+    doit(connfd);
     // 자신 쪽의 연결 끝을 닫는다.
-    Close(connfd);  // line:netp:tiny:close
+    Close(connfd);
   }
   return 0;
 }
@@ -53,15 +53,14 @@ void doit(int connfd)
   char response[MAX_OBJECT_SIZE];    
   rio_t rio,tiny_rio;//서버와 주고받을 tiny_rio버퍼생성
   char port[MAXLINE]="80"; //proxy <--> tiny 포트번호
-  // char *host, *port;
 
   /* Read request line and headers*/
   Rio_readinitb(&rio, connfd);
   Rio_readlineb(&rio, buf, MAXLINE);
   printf("Request headers:\n");
   printf("%s", buf);
-  sscanf(buf, "%s %s %s", method, uri, version);// [GET / HTTP/1.1]
-  printf(">>method:%s, uri:%s, version:%s\n", method, uri, version);
+  sscanf(buf, "%s %s %s", method, uri, version);
+  printf("***method:%s, ***uri:%s, ***version:%s\n", method, uri, version);
 
   /*error 처리*/
   if(strcasecmp(method,"GET") && strcasecmp(method,"HEAD"))
@@ -73,8 +72,6 @@ void doit(int connfd)
   /*host, filename, port 파싱*/
   parse_uri(uri, host, filename, port);
 
-  // char post_str[100];
-  // sprintf(post_str,"%d",port); //port 자료형을 int -> str 변환
   /*requests headers 생성*/
   strcpy(uri,"");
   strcat(uri,filename);
@@ -88,7 +85,6 @@ void doit(int connfd)
   printf("%s", buf);
 
   /*clientfd open*/
-
   clientfd = Open_clientfd(host, port);
   Rio_readinitb(&tiny_rio, clientfd);//tiny_rio 와 clientfd 연결
 
@@ -130,8 +126,8 @@ void parse_uri(char *uri, char *host, char *filename,char *port)
     sscanf(host,"%s",host);
   }
   /*값 확인*/
-  printf(">>>>parse 후 host :%s\n",host);
-  printf(">>>>parse 후 port  :%s\n",port);
-  printf(">>>>parse 후 filename  :%s\n",filename);
+  printf(">>>>parse 후 host     :%s\n",host);
+  printf(">>>>parse 후 port     :%s\n",port);
+  printf(">>>>parse 후 filename :%s\n",filename);
   return;
 }
