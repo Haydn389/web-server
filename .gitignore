@@ -2,6 +2,14 @@
 tiny/tiny
 tiny/cgi-bin/adder
 proxy
+tiny2.c
+tiny copy.c
+proxy copy.c
+proxy_1.c
+proxy1
+test.c
+test1.c
+test2.c
 
 # MacOS
 .DS_Store
@@ -61,3 +69,4 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
