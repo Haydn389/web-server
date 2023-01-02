@@ -92,9 +92,17 @@ void doit(int connfd)
   Rio_writen(clientfd, buf, strlen(buf));
 
   /*proxy -> client로 전송(echo server이용)*/
-  Rio_readnb(&tiny_rio, response, MAX_OBJECT_SIZE);
-  Rio_writen(connfd, response, MAX_OBJECT_SIZE);//클라이언트로 전송
-
+  // Rio_readnb(&tiny_rio, response, MAX_OBJECT_SIZE);
+  // Rio_writen(connfd, response, MAX_OBJECT_SIZE);//클라이언트로 전송
+  
+  /*방법2*/
+  size_t n;
+  while((n = Rio_readlineb(&tiny_rio, response, MAXLINE)) != 0)
+  {
+      printf("server received %d bytes\n", (int)n);
+      printf("클라이언트로부터 받은 요청: %s",response);
+      Rio_writen(connfd, response, n);
+  }
   Close(clientfd);
 }
 
